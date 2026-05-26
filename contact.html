@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせ | Tomoshibi（トモシビ）</title>
+    <meta name="description" content="Tomoshibi（トモシビ）へのお問い合わせはこちらから。通常2〜3営業日以内にご返信いたします。">
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#E8735A">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #FDF8F2;
+            --coral: #E8735A;
+            --coral-light: #F2957E;
+            --coral-pale: #FDEAE5;
+            --amber: #E8A850;
+            --amber-pale: #FDF0D8;
+            --text-dark: #3D2B1F;
+            --text-mid: #7A5C4F;
+            --text-light: #B09080;
+            --border-soft: #EDE4DC;
+            --border-warm: #F0E8E0;
+            --shadow: rgba(61, 43, 31, 0.08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans JP', 'Zen Maru Gothic', sans-serif;
+            line-height: 1.8;
+            color: var(--text-dark);
+            background: var(--cream);
+            letter-spacing: 0.02em;
+            min-height: 100vh;
+        }
+        h1, h2 { font-family: 'Zen Maru Gothic', sans-serif; }
+
+        header {
+            padding: 18px 0;
+            background: rgba(253, 248, 242, 0.95);
+            border-bottom: 1px solid var(--border-soft);
+            position: sticky; top: 0; z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .container { max-width: 640px; margin: 0 auto; padding: 0 24px; }
+        .logo {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            font-size: 24px; font-weight: 700; color: var(--coral);
+            text-decoration: none;
+        }
+        .logo span { color: var(--amber); }
+
+        .main { padding: 56px 0 80px; }
+        .page-title {
+            font-size: 28px; font-weight: 700; color: var(--text-dark);
+            margin-bottom: 12px; text-align: center;
+        }
+        .page-lead {
+            text-align: center; color: var(--text-mid); font-size: 14px;
+            margin-bottom: 40px; line-height: 1.9;
+        }
+
+        .card {
+            background: var(--cream);
+            border-radius: 24px;
+            padding: 36px 32px;
+            box-shadow: 0 4px 24px var(--shadow), 0 0 0 1px var(--border-warm);
+        }
+        .field { margin-bottom: 28px; }
+        .label {
+            display: block; font-size: 13px; font-weight: 700;
+            color: var(--text-mid); margin-bottom: 10px;
+        }
+        .required { color: var(--coral); }
+        .input, .textarea {
+            width: 100%;
+            background: white;
+            border: 1.5px solid var(--border-soft);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 15px; color: var(--text-dark);
+            font-family: 'Noto Sans JP', sans-serif;
+            transition: border-color 0.2s ease;
+        }
+        .input:focus, .textarea:focus { outline: none; border-color: var(--coral-light); }
+        .textarea { min-height: 160px; resize: vertical; line-height: 1.8; }
+
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip {
+            padding: 9px 16px;
+            border-radius: 100px;
+            border: 1.5px solid var(--border-soft);
+            background: white;
+            font-size: 13px; color: var(--text-mid);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            user-select: none;
+        }
+        .chip.active {
+            border-color: var(--coral);
+            background: var(--coral-pale);
+            color: var(--coral);
+            font-weight: 700;
+        }
+
+        /* ハニーポット（人間には見えない） */
+        .hp { position: absolute; left: -9999px; opacity: 0; height: 0; overflow: hidden; }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--coral) 0%, var(--amber) 100%);
+            color: white;
+            border: none;
+            border-radius: 100px;
+            padding: 16px;
+            font-size: 16px; font-weight: 700;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(232, 115, 90, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 8px;
+        }
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(232, 115, 90, 0.4);
+        }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .status-msg {
+            margin-top: 20px; padding: 16px; border-radius: 12px;
+            font-size: 14px; text-align: center; display: none;
+        }
+        .status-msg.success {
+            display: block; background: #EBF4EC; color: #4A7C50;
+            border: 1px solid #C5E0C8;
+        }
+        .status-msg.error {
+            display: block; background: var(--coral-pale); color: var(--coral);
+            border: 1px solid var(--coral-light);
+        }
+
+        .note {
+            font-size: 12px; color: var(--text-light);
+            text-align: center; margin-top: 24px; line-height: 1.8;
+        }
+        .note a { color: var(--coral); }
+
+        .back-link {
+            display: inline-block; margin-top: 32px;
+            color: var(--text-mid); font-size: 13px; text-decoration: none;
+        }
+        .back-link:hover { color: var(--coral); }
+
+        footer {
+            padding: 32px 0; background: #3D2B1F;
+            color: rgba(253, 248, 242, 0.5); text-align: center; font-size: 12px;
+        }
+        footer a { color: rgba(253, 248, 242, 0.7); text-decoration: none; margin: 0 10px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">Tomo<span>shibi</span></a>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <h1 class="page-title">お問い合わせ</h1>
+            <p class="page-lead">
+                ご質問・ご要望などお気軽にご連絡ください。<br>
+                通常2〜3営業日以内にご返信いたします。
+            </p>
+
+            <form class="card" id="contactForm">
+                <!-- ハニーポット（ボット対策・人間は触れない） -->
+                <div class="hp" aria-hidden="true">
+                    <label>ウェブサイト<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="email">返信先メールアドレス <span class="required">*</span></label>
+                    <input class="input" type="email" id="email" name="email" placeholder="example@email.com" required>
+                </div>
+
+                <div class="field">
+                    <label class="label">お問い合わせの種類</label>
+                    <div class="chips" id="chips">
+                        <div class="chip" data-value="account">アカウントについて</div>
+                        <div class="chip" data-value="content">投稿・コンテンツについて</div>
+                        <div class="chip" data-value="ad">広告について</div>
+                        <div class="chip" data-value="technical">技術的な問題</div>
+                        <div class="chip active" data-value="other">その他</div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="message">内容 <span class="required">*</span></label>
+                    <textarea class="textarea" id="message" name="message" placeholder="お困りの内容をできるだけ詳しくお書きください。" required maxlength="2000"></textarea>
+                </div>
+
+                <button class="submit-btn" type="submit" id="submitBtn">送信する</button>
+
+                <div class="status-msg" id="statusMsg"></div>
+            </form>
+
+            <p class="note">
+                ※ アプリをご利用中の方は、アプリ内の「設定 → お問い合わせ」からもご連絡いただけます。<br>
+                <a href="https://tomoshibi-app.github.io/tomoshibi/privacy-policy.html">プライバシーポリシー</a>
+            </p>
+
+            <div style="text-align:center;">
+                <a href="index.html" class="back-link">← トップへ戻る</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <a href="https://tomoshibi-app.github.io/tomoshibi/privacy-policy.html">プライバシーポリシー</a>
+            <a href="https://tomoshibi-app.github.io/tomoshibi/terms.html">利用規約</a>
+            <p style="margin-top:16px;">&copy; 2026 Tomoshibi. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // ============== Supabase 設定（anon キーは公開用・埋め込み可） ==============
+        const SUPABASE_URL = 'https://vacvjhdwcivfkredxtag.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhY3ZqaGR3Y2l2ZmtyZWR4dGFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwOTI0MzksImV4cCI6MjA5MDY2ODQzOX0.IRP68eXYxmAoCURBcPC9lCTvnvBF1Xfb6y-B3-mAm64';
+
+        // カテゴリ選択（チップ）
+        let selectedCategory = 'other';
+        document.getElementById('chips').addEventListener('click', (e) => {
+            const chip = e.target.closest('.chip');
+            if (!chip) return;
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            selectedCategory = chip.dataset.value;
+        });
+
+        // 送信処理
+        const form = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMsg = document.getElementById('statusMsg');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            statusMsg.className = 'status-msg';
+            statusMsg.textContent = '';
+
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+            const website = form.querySelector('[name="website"]').value; // ハニーポット
+
+            if (!email || !message) {
+                statusMsg.className = 'status-msg error';
+                statusMsg.textContent = '必須項目を入力してください。';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '送信中...';
+
+            try {
+                const res = await fetch(`${SUPABASE_URL}/functions/v1/web-contact`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    },
+                    body: JSON.stringify({ email, category: selectedCategory, message, website }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
+                statusMsg.className = 'status-msg success';
+                statusMsg.textContent = '送信が完了しました。ありがとうございます。内容を確認のうえ、ご返信いたします。';
+                form.reset();
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                document.querySelector('.chip[data-value="other"]').classList.add('active');
+                selectedCategory = 'other';
+            } catch (err) {
+                statusMsg.className = 'status-msg error';
+                statusMsg.textContent = '送信に失敗しました。時間をおいて再度お試しください。';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '送信する';
+            }
+        });
+    </script>
+</body>
+</html>
